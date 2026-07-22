@@ -19,8 +19,9 @@ pipeline {
                     ls -la
                 '''
             }
-        }  
-        stage('test'){
+        } 
+
+        stage('test') {
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -28,16 +29,15 @@ pipeline {
                 }
             }
             steps {
-
-               sh '''
-                  echo 'testing'
-                  test -f build/index.html 
-                  npm test
+                sh '''
+                    echo 'testing'
+                    test -f build/index.html
+                    npm test
                 '''
             }
-
         }
-         stage('E2E'){
+
+        stage('E2E') {
             agent {
                 docker {
                     image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
@@ -45,38 +45,35 @@ pipeline {
                 }
             }
             steps {
-
-               sh '''
-                  npm install serve
-                  node_modules/.bin/serve -s build &
-                  sleep 10
-                  npx playwright test
+                sh '''
+                    npm install serve
+                    node_modules/.bin/serve -s build &
+                    sleep 10
+                    npx playwright test
                 '''
             }
-
         }
-        stage('Deploy'){
-            agent{
-                docker{
+
+        stage('Deploy') {
+            agent {
+                docker {
                     image 'node:18-alpine'
                     reuseNode true
                 }
             }
 
-            steps{
-                sh'''
-                npm install netlify -cli
+            steps {
+                sh '''
+                    npm install netlify -cli
 
-                node_modules/.bin/netlify -version
-
-
-                ''''
+                    node_modules/.bin/netlify -version
+                '''
             }
         }
-
     }
-    post{
-        always{
+
+    post {
+        always {
             junit 'jest-results/junit.xml'
         }
     }
