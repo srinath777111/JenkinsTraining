@@ -23,7 +23,7 @@ pipeline {
         stage("test"){
             steps{
                 Sh '''
-                  echo " testing"
+                  echo 'testing'
                   npm test
                 '''
             }
