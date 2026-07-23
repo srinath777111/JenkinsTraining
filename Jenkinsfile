@@ -244,8 +244,7 @@ pipeline {
 
                     steps {
                         sh '''
-                            npm install
-                            npm install serve
+                            
 
                             npx serve -s build &
 
