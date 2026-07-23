@@ -180,6 +180,12 @@ pipeline {
     agent any
 
     stages {
+        stage('docker'){
+            steps{
+                sh ' docker build -t my-img-own .'
+            }
+
+        }
 
         stage('Build') {
             agent {
