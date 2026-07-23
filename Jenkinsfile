@@ -97,13 +97,16 @@ pipeline {
             steps {
                 sh '''
                     ls -la
+
                     node --version
                     npm --version
 
                     npm ci
+
                     npm run build
 
                     ls -la
+                    ls build
                 '''
             }
         }
@@ -137,16 +140,21 @@ pipeline {
                         docker {
                             image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
                             reuseNode true
+                            args '-p 3000:3000'
                         }
                     }
 
                     steps {
                         sh '''
+                            npm install
+
                             npm install serve
 
-                            node_modules/.bin/serve -s build &
+                            npx serve -s build -l 3000 &
 
                             sleep 10
+
+                            curl http://localhost:3000
 
                             npx playwright test --reporter=html
                         '''
